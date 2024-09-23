@@ -34,18 +34,20 @@ def draw_cat_plot():
 
     # 6
     df_cat = df_cat.groupby(['cardio','feature','value']).size().reset_index(name = "total")
-    print("cat", df_cat)
+    
 
     # 7
     df_cat = pd.melt(df,id_vars = ['cardio'],value_vars=['active','alco','cholesterol','gluc','overweight','smoke'],var_name = 'variable',value_name = 'value')
     graphs = sns.catplot(x='variable', hue="value", col="cardio", data=df_cat, kind="count" )
-    graphs.set(ylabel = 'total')
+    graphs.set_axis_labels('variable','total')
+    
 
 
 
 
     # 8
-    fig = graphs
+    fig = graphs.fig
+   
 
 
     # 9
@@ -56,20 +58,28 @@ def draw_cat_plot():
 # 10
 def draw_heat_map():
     # 11
-    df_heat = None
+    df_heat = df[(df['height'] >= df['height'].quantile(0.025))&
+    (df['height'] <= df['height'].quantile(0.975))&
+    (df['weight']>= df['weight'].quantile(0.025))&
+    (df['weight']<= df['weight'].quantile(0.975))&
+    (df['ap_lo'] <= df['ap_hi'])]
+    
 
     # 12
-    corr = None
+    corr = df_heat.corr()
+   
 
     # 13
-    mask = None
+    mask = np.triu(np.ones_like(corr, dtype=bool))
 
 
 
     # 14
-    fig, ax = None
+    fig, ax = plt.subplots()
 
     # 15
+    sns.heatmap(corr,mask=mask,annot= True,fmt = '.1f',square=True, linewidths=0.5,ax=ax)
+    
 
 
 
