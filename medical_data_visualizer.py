@@ -4,13 +4,28 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 1
-df = None
+df = pd.read_csv("medical_examination.csv")
 
 # 2
-df['overweight'] = None
+def isOver(d):
+    if d > 25:
+        return 1
+    else:
+        return 0
+    
+df['overweight'] =  df['weight']/(df['height']/100)**2 
+
+df['overweight'] = df['overweight'].apply(isOver)
 
 # 3
+def normalize(num):
+    if num >1:
+        return 1
+    else:
+        return 0
 
+df['gluc'] = df['gluc'].apply(normalize)
+df['cholesterol'] =df['cholesterol'].apply(normalize)
 
 # 4
 def draw_cat_plot():
